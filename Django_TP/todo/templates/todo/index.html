@@ -45,8 +45,10 @@
                         <h4 class="card-title text-center">Mes tâches</h4>
                     </div>
                     <div class="card-body py-5">
+                        <input class="form-control" id="myInput" type="text" placeholder="Rechercher dans la liste..">
+                        <br>
                         <table class="table">
-                            <tbody>
+                            <tbody id="myTable">
                                 {% if all_tasks %}
                                     {% for task in all_tasks %}
                                     <tr>
@@ -54,7 +56,7 @@
                                             {% if task.is_done %}
                                                 <i style="font-size: 25px;" class="text-success fa fa-check-square-o" tabindex="0" data-toggle="tooltip" title="Tâche terminée !" onclick="location.href='{% url "not_done" task.id %}'"></i>
                                             {% else %}
-                                                <i style="font-size: 25px;" class="text-primary fa fa-square-o" tabindex="0" data-toggle="tooltip" title="Terminée ?" onclick="location.href='{% url is_done" task.id %}'"></i></i>
+                                                <i style="font-size: 25px;" class="text-primary fa fa-square-o" tabindex="0" data-toggle="tooltip" title="Terminée ?" onclick="location.href='{% url 'is_done' task.id %}'"></i></i>
                                             {% endif %}
                                         </td>
                                         <th style="width: 90%; vertical-align: middle;">
@@ -114,5 +116,16 @@
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
     </script>
 {% endblock %}
