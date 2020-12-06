@@ -1,0 +1,42 @@
+{% extends '../base.html' %}
+
+{% block content %}
+    {% if task %}
+        <div class="jumbotron ">
+            <h1 class="text-center">Modification de la tâche N°{{ task.id }}</h1>
+
+            <div class="container-fluid h-100 text-dark">
+                <hr/>
+                <div class="row justify-content-center align-items-center h-100">
+                <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3 bg-light py-3">
+                    <form class="form" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="form-label" for="task_content">Contenu de la tâche :</label>
+                            <textarea class="form-control" id="task_content" placeholder="{{ task.content }}" name="content">{{ task.content }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="container">
+                            <div class="row">
+                                <input type="hidden" value="{{task.is_done}}" name="is_done">
+                                <button type="submit" class="btn btn-primary mb-2">Modifier la tâche</button>
+                            </div>
+                            </div>
+                        </div> 
+                    </form>
+                </div>
+                </div> 
+            </div>
+        </div>
+    {% endif %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-2"></div>
+        <div class="col-md-8">
+            <a href="{% url 'index' %}"><i class="fa fa-long-arrow-left"></i> Revenier à la liste</a>
+        </div>
+        <div class="col col-lg-2"></div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}{% endblock %}

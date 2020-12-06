@@ -1,0 +1,118 @@
+{% extends '../base.html' %}
+
+{% block content %}
+    <div class="jumbotron ">
+        <h1 class="text-center">To-Do List</h1>
+
+        <div class="container-fluid h-100 text-dark">
+            <hr/>
+            <div class="row justify-content-center align-items-center h-100">
+            <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3 bg-light">
+                <form class="form" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label" for="task_content">Contenu de la tâche :</label>
+                        <textarea class="form-control" id="task_content" placeholder="Tâche ..." name="content"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="container">
+                        <div class="row">
+                            <button type="submit" class="btn btn-primary mb-2">Ajouter une tâche</button>
+                        </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+ 
+    </div>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-2"></div>
+            <div class="col-md-8">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="card text-white bg-warning mb-3" >
+                    <div class="card-header">
+                        <h4 class="card-title text-center">Mes tâches</h4>
+                    </div>
+                    <div class="card-body py-5">
+                        <table class="table">
+                            <tbody>
+                                {% if all_tasks %}
+                                    {% for task in all_tasks %}
+                                    <tr>
+                                        <td class="border-right" style="width: 5%; vertical-align: middle;">
+                                            {% if task.is_done %}
+                                                <i style="font-size: 25px;" class="text-success fa fa-check-square-o" tabindex="0" data-toggle="tooltip" title="Tâche terminée !" onclick="location.href='{% url "not_done" task.id %}'"></i>
+                                            {% else %}
+                                                <i style="font-size: 25px;" class="text-primary fa fa-square-o" tabindex="0" data-toggle="tooltip" title="Terminée ?" onclick="location.href='{% url is_done" task.id %}'"></i></i>
+                                            {% endif %}
+                                        </td>
+                                        <th style="width: 90%; vertical-align: middle;">
+                                            {% if task.is_done %}
+                                                <del class="bg-danger">{{ task.content }}</del>
+                                            {% else %}
+                                                <a href="{% url 'edit' task.id %}">{{ task.content }}</a>
+                                            {% endif %}
+                                            <br><small class="float-right">{{ task.created_date }}</small>
+                                        </th>
+                                        
+                                        <td class="border-left" style="width: 5%; vertical-align: middle;">
+                                            <i style="font-size: 25px;" class="text-danger fa fa-times" tabindex="0" data-toggle="tooltip" title="Supprimer ?" onclick="supprimerModal('{{ task.id }}')"></i>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-lg-2"></div>
+        </div>
+    </div>
+
+    <!-- Supprimer Modal-->
+    <div class="modal fade" id="supprimerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmation de la suppression</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Êtes-vous sûr de vouloir supprimer la tâche ?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-primary" id="id_supprimer">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Modal supprimer -->
+    <script type="text/javascript">
+        function supprimerModal(id){
+            $("#supprimerModal").modal('show');
+
+            $("#id_supprimer").attr("href","/delete/"+id);
+
+        }
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+{% endblock %}
